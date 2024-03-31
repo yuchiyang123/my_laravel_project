@@ -329,8 +329,8 @@
                 type: "GET",
                 success: function(response) {
                     // 在彈出的視窗中顯示留言
-                    //var encodedHtmlContent = utf8_encode(response.htmlContent);
-                    $('.popup-content').html(response.htmlContent);
+                    var encodedHtmlContent = utf8_encode(response.htmlContent);
+                    $('.popup-content').html(encodedHtmlContent);
                     $('.popup').show();
                 },
                 error: function(xhr, status, error) {

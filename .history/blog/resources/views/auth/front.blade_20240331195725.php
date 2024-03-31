@@ -203,7 +203,9 @@
                     </div>
                 </div>
                 <div class="messagecount" id="messagecount_{{ $mjoin->id }}">
-                    
+                    <div>
+                        <a href="#">8則留言</a>
+                    </div>
                 </div>
             </div>
             <div class="line">
@@ -211,15 +213,16 @@
                 <div class="inner-grid">@yield("PostAcion2")</div>
                 <div class="inner-grid">@yield("PostAcion3")</div>
             </div>
-            
+            <div class="SeeAllMessage">
+                <a href="#">查看全部留言</a>
+            </div>
             <div class="ShowAllMessage" id="showAllMessage_{{ $mjoin->id }}">
                 
             </div>
             <div class="ShowAllMessage">
                 <script>
                    $(document).ready(function() {
-                        showReply({{ $mjoin->id }}),
-                        messagecount({{ $mjoin->id }});
+                        showReply({{ $mjoin->id }});
                     });
                     function showReply(mjoinId) {
                         $.ajax({
@@ -237,18 +240,14 @@
                     }
                     function messagecount(mjoinId) {
                         $.ajax({
-                            url: "/front-reply-count/" + mjoinId,
-                            type: "GET",
-                            success: function(response) {
+                            url:"/front-reply-count/" + mjoinId,
+                            type: "GET" ,
+                            success: function(reponse) {
                                 $('#messagecount_' + mjoinId).html(response.htmlContent_reply);
                                 $('#messagecount_' + mjoinId).show();
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
                             }
-                        });
+                        })
                     }
-
                     
                 </script>
                

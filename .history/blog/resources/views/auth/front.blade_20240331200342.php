@@ -211,14 +211,16 @@
                 <div class="inner-grid">@yield("PostAcion2")</div>
                 <div class="inner-grid">@yield("PostAcion3")</div>
             </div>
-            
+            <div class="SeeAllMessage">
+                <a href="#">查看全部留言</a>
+            </div>
             <div class="ShowAllMessage" id="showAllMessage_{{ $mjoin->id }}">
                 
             </div>
             <div class="ShowAllMessage">
                 <script>
                    $(document).ready(function() {
-                        showReply({{ $mjoin->id }}),
+                        showReply({{ $mjoin->id }});
                         messagecount({{ $mjoin->id }});
                     });
                     function showReply(mjoinId) {
@@ -237,18 +239,17 @@
                     }
                     function messagecount(mjoinId) {
                         $.ajax({
-                            url: "/front-reply-count/" + mjoinId,
-                            type: "GET",
-                            success: function(response) {
-                                $('#messagecount_' + mjoinId).html(response.htmlContent_reply);
+                            url:"/front-reply-count/" + mjoinId,
+                            type: "GET" ,
+                            success: function(reponse) {
+                                $('#messagecount_' + mjoinId).html(reponse.htmlContent_reply);
                                 $('#messagecount_' + mjoinId).show();
-                            },
+                            }
                             error: function(xhr, status, error) {
                                 console.error(xhr.responseText);
                             }
-                        });
+                        })
                     }
-
                     
                 </script>
                

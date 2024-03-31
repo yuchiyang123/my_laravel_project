@@ -16,65 +16,42 @@ class UserMjoinController extends Controller
 
         return view('auth.front', compact('mjoins'));
     }
-    public function mjoin_reply_count($mjoinId){
-        
-        $count = Mjoin_reply::where('reply_id', $mjoinId)->count();
-        $count_replys = '
-            <div>
-                <a href="#">'.$count.'則留言</a>
-            </div>';
-        return response()->json(['htmlContent_reply' => $count_replys]);
-    }
 
-    //回復顯示
     public function mjoin_reply($mjoinId)
     {
         $mjoin_replys = Mjoin_reply::where('reply_id', $mjoinId)->get();
-        
-        //IF回復為0
-        $mjoin_replys_count = Mjoin_reply::where('reply_id', $mjoinId)->count();
 
         $htmlContent = '';
-        if($mjoin_replys_count === 0){
-            $htmlContent = '
-            <div class="LeaveMessage" style="text-align:center;width:auto;display:inline-block;">
-                <h2>無留言</h2>
-            </div>';
-        }else{
-            foreach ($mjoin_replys as $mjoin_reply) {
-                // 時˙間差
-                $postTime = Carbon::parse($mjoin_reply->post_time);
-                $currentTime = Carbon::now();
-                $timeDifference = $currentTime->diffForHumans($postTime);
-    
-                // 生成HTML内容
-                $htmlContent .= '
-                <div class="SeeAllMessage">
-                    <a href="#">查看全部留言</a>
-                </div>
-                <div class="LeaveMessage">
-                    <div>
-                        <div class="LeaveMessageimgdiv">
+
+        foreach ($mjoin_replys as $mjoin_reply) {
+            // 時˙間差
+            $postTime = Carbon::parse($mjoin_reply->post_time);
+            $currentTime = Carbon::now();
+            $timeDifference = $currentTime->diffForHumans($postTime);
+
+            // 生成HTML内容
+            $htmlContent .= '
+            <div class="LeaveMessage">
+                <div>
+                    <div class="LeaveMessageimgdiv">
+                        <a href="#">'.$mjoin_reply->user.'</a>
+                    </div>
+                    <div class="LeaveMessageall">
+                        <div class="LeaveMessageUsername">
                             <a href="#">'.$mjoin_reply->name.'</a>
                         </div>
-                        <div class="LeaveMessageall">
-                            <div class="LeaveMessageUsername">
-                                <a href="#">'.$mjoin_reply->name.'</a>
-                            </div>
-                            <div class="LeaveMessageMain">
-                                '.$mjoin_reply->main.'
-                            </div>
-                            <div class="LeaveMessageAction">
-                                <a href="#">'.$timeDifference.'</a>&emsp;<a href="#">'.$mjoin_reply->good.
-                                '讚</a>&emsp;<a href="'.$mjoin_reply->level.$mjoin_reply->reply_id.'">回复</a>
-                            </div>
+                        <div class="LeaveMessageMain">
+                            '.$mjoin_reply->main.'
+                        </div>
+                        <div class="LeaveMessageAction">
+                            <a href="#">'.$timeDifference.'</a>&emsp;<a href="#">'.$mjoin_reply->good.
+                            '讚</a>&emsp;<a href="'.$mjoin_reply->level.$mjoin_reply->reply_id.'">回复</a>
                         </div>
                     </div>
-                </div>';
-            }
-    
+                </div>
+            </div>';
         }
-        
+
         return response()->json(['htmlContent' => $htmlContent]);
     }
 
@@ -83,9 +60,18 @@ class UserMjoinController extends Controller
     {
         $allmjoin = UserPostMjoin::where('id', $mjoinId)->first();
 
-        //套用上面的方法回復顯示
+        $description = Str::of($allmjoin->description)->wordwrap(80, "<br>\n", true);
+
+        //取用留言 js
+        
         $mjoinReplyHtml = $this->mjoin_reply($mjoinId);
         $mjoinReplyContent = json_decode($mjoinReplyHtml->getContent(), true)['htmlContent'];
+
+        $encoding = mb_detect_encoding($description, 'UTF-8, ISO-8859-1, GBK');
+
+        if ($encoding && $encoding !== 'UTF-8') {
+            $description = mb_convert_encoding($description, 'UTF-8', $encoding);
+        }
 
 
         $htmlContent = 
@@ -106,7 +92,7 @@ class UserMjoinController extends Controller
                     </div>
                     <div class="clearfix"></div>
                     <p class="main">
-                    '. $allmjoin->description.'
+                    '. $description.'
                     </p>
                     <div class="container">
                         <div class="respond">
@@ -114,7 +100,7 @@ class UserMjoinController extends Controller
                             <a href="#">👍🏽</a>
                             <div>
 
-                                <a href="#">'. $allmjoin->good.'</a>
+                                <a href="#">58</a>
                             </div>
                         </div>
                         <div class="message">

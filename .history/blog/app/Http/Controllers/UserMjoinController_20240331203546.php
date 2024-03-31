@@ -49,9 +49,6 @@ class UserMjoinController extends Controller
     
                 // 生成HTML内容
                 $htmlContent .= '
-                <div class="SeeAllMessage">
-                    <a href="#">查看全部留言</a>
-                </div>
                 <div class="LeaveMessage">
                     <div>
                         <div class="LeaveMessageimgdiv">

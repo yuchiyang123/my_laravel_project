@@ -37,7 +37,7 @@ class UserMjoinController extends Controller
         $htmlContent = '';
         if($mjoin_replys_count === 0){
             $htmlContent = '
-            <div class="LeaveMessage" style="text-align:center;width:auto;display:inline-block;">
+            <div class="LeaveMessage" style="text-align:center;width:auto;">
                 <h2>無留言</h2>
             </div>';
         }else{
@@ -49,9 +49,6 @@ class UserMjoinController extends Controller
     
                 // 生成HTML内容
                 $htmlContent .= '
-                <div class="SeeAllMessage">
-                    <a href="#">查看全部留言</a>
-                </div>
                 <div class="LeaveMessage">
                     <div>
                         <div class="LeaveMessageimgdiv">
