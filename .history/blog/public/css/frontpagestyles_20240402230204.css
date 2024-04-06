@@ -1,0 +1,233 @@
+
+
+body {
+    display: block;
+    margin: 0;
+    overflow-wrap: break-word;
+}
+
+.grid-container {
+
+    display: grid;
+    grid-template-columns: auto 300px 800px auto 300px;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+    grid-template-areas:
+        "D A B E C";
+
+}
+
+.grid-item {
+    padding: 15px;
+    text-align: center;
+
+}
+
+.cut {
+    border: 1px solid gray;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.first {
+    grid-area: A;
+    min-height: 800px;
+}
+
+.end {
+    grid-area: C;
+}
+
+.mid {
+    grid-area: B;
+
+    grid-gap: 10px;
+}
+
+.four {
+    grid-area: D;
+}
+
+.five {
+    grid-area: E;
+}
+
+.limt {
+    min-height: auto;
+}
+
+.inner-grid {
+    display: inline-grid;
+    width: 30%;
+    transition: background-color 0.3s;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.inner-grid:hover {
+    background-color: rgba(128, 128, 128, 0.4);
+}
+
+.line {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+.respond {
+
+    padding-bottom: 8px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.respond>div {
+    display: inline-block;
+}
+
+.message {
+    text-align: right;
+}
+
+.respond,
+.message {
+    display: inline-block;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 850px;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 9998;
+    max-width: 850px;
+    max-height: 800px;
+    overflow-y: auto;
+
+}
+
+.trigger a {
+    cursor: pointer;
+}
+
+.blur-background {
+    filter: blur(0px);
+}
+
+
+
+.imgsize {
+    width: 40px;
+    height: auto;
+
+}
+
+.image-container {
+    float: left;
+    margin-right: 10px;
+}
+
+.text-container {
+    overflow: hidden;
+}
+
+.user {
+
+    text-align: left;
+    font-weight: bold;
+
+}
+
+.date {
+    font-size: 14px;
+    text-align: left;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9997;
+}
+
+.SeeAllMessage {
+    padding-top: 5px;
+    text-align: left;
+}
+
+.SeeAllMessage a {
+    text-align: left;
+    color: gray;
+    font-weight: bold;
+}
+
+.LeaveMessage {
+    margin-top: 10px;
+    padding-bottom: 5px;
+
+}
+
+.LeaveMessageall {
+    border-radius: 5px;
+    display: block;
+
+}
+
+.LeaveMessageUsernameIMG {
+    width: 40px;
+    height: auto;
+    background-color: #ffffff;
+    padding-bottom: 6px;
+
+}
+
+.LeaveMessageimgdiv {
+    float: left;
+    margin-right: 10px;
+    display: block;
+}
+
+.LeaveMessageUsername {
+    text-align: left;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.LeaveMessageMain {
+    text-align: left;
+    font-size: 14px;
+    padding-bottom: 6px;
+
+}
+
+.LeaveMessageAction {
+    font-size: 12px;
+    text-align: left;
+}
+.custom-shadow {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); 
+}
+
+.image-container img {
+    max-width: 100%; 
+    max-height: 100%; 
+}
+  

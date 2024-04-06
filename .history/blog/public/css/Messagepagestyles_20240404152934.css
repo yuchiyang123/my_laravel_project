@@ -1,0 +1,119 @@
+
+body {
+    display: block;
+    margin: 0;
+    overflow-wrap: break-word;
+    height: 100vh; /* 設置高度與視窗高度相同 */
+    overflow: hidden; /* 隱藏超出範圍的內容，以防止視窗滾動 */
+}
+
+.UserMassageBox a {
+    text-decoration: none;
+}
+
+.UserMassageBoxName{
+    font-size: 16px;
+    color:black;
+}
+
+.UserMassageBoxMessage{
+    font-size: 14px;
+    color: #666;
+}
+
+.grid-container {
+
+    display: grid;
+    grid-template-columns: 300px auto 350px;
+    grid-template-rows: 100vh; 
+
+    grid-gap: 0px;
+    grid-template-areas:
+        "A B C";
+
+}
+
+
+.grid-item {
+    padding: 15px;
+    text-align: center;
+
+}
+
+.cut {
+    border: 1px solid gray;
+}
+
+.first {
+    grid-area: A;
+    border: 1px solid gray;
+}
+
+.end {
+    grid-area: C;
+    border: 1px solid gray;
+}
+
+.mid {
+    grid-area: B;
+    border: 1px solid gray;
+}
+.user_img_message {
+    height: 10%;
+    width: auto;
+}
+
+.content {
+    height: 100vh; /* 設置高度與視窗高度相同 */
+    overflow: hidden; /* 隱藏超出範圍的內容，以防止視窗滾動 */
+}
+.chat-online {
+    color: #34ce57
+}
+
+.chat-offline {
+    color: #e4606d
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+
+.chat-message-left,
+.chat-message-right {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.chat-message-left {
+    margin-right: auto;
+}
+
+.chat-message-right {
+    flex-direction: row-reverse;
+    margin-left: auto;
+}
+.py-3 {
+    padding-top: 1rem!important;
+    padding-bottom: 1rem!important;
+}
+.px-4 {
+    padding-right: 1.5rem!important;
+    padding-left: 1.5rem!important;
+}
+.flex-grow-0 {
+    flex-grow: 0!important;
+}
+.border-top {
+    border-top: 1px solid #dee2e6!important;
+}
+.bottom-container {
+    position: fixed; /* 將元素固定在畫面上 */
+
+    bottom: 0; /* 與畫面底部的距離為 0 */
+    width: 100%; /* 寬度佔滿父元素的寬度 */
+    
+}

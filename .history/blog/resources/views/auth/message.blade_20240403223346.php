@@ -1,0 +1,57 @@
+@extends ('layouts.messagelo')
+
+@section ('title','')
+
+@section ('MessageFirst')
+<div class="">
+    <div class="d-flex">
+        <div class="">
+            <label class="">聊天室</label>
+        </div>
+        <div class="">
+            <a class="">寫新訊息</a>
+        </div>
+    </div>
+    <div class="">
+        <input type="text" class="" placeholder="搜尋">
+    </div>
+    <div>
+        <div class="">
+            <a href="#">
+                <div class="d-block">
+                    <img src="{{ asset('image/head.png') }}" class="user_img_message"><span>你的用戶名</span>
+                    <div class="">
+                        <span>你的用戶名</span>
+                        <span>喂喂喂喂喂</span>
+                    </div>
+                </div>
+                
+            </a>
+        </div>
+    </div>
+        <br>
+    <div>
+        <div class="">
+            <a href="#">
+                <div class="d-block">
+                    <img src="{{ asset('image/head.png') }}" class="rounded float-start user_img_message">你的用戶名
+                </div>
+                <div class="">
+                    <span>你的用戶名</span>
+                    <span>喂喂喂喂喂</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section ('MessageMid')
+
+
+@endsection
+
+@section ('MessageEnd')
+
+
+@endsection
