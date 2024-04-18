@@ -34,7 +34,13 @@
 
     <script>
         var firebaseConfig = {
-            
+            apiKey: "AIzaSyDnY37byXfJH6EDSovfolM27bYV_k1r7ko",
+            authDomain: "project-410302.firebaseapp.com",
+            projectId: "project-410302",
+            storageBucket: "project-410302.appspot.com",
+            messagingSenderId: "956395546338",
+            appId: "1:956395546338:web:f10b15015d724ab9a020bb",
+            measurementId: "G-HY8KVX12J0"
         };
         firebase.initializeApp(firebaseConfig);
     </script>
