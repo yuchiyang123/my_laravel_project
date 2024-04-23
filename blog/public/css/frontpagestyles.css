@@ -225,7 +225,5 @@ a {
 .image-container img {
     max-width: 500px; 
     max-height: 500px; 
-    width: fit-content;
-    height: fit-content;
 }
   

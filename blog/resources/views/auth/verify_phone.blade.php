@@ -26,7 +26,7 @@
         </form>
 
             <div style="margin-bottom: 20px;">
-            <label>電話:</label>
+            <label>驗證碼:</label>
             <div class="alert alert-success" id="successOtpAuth" style="display: none;"></div>
             <form>
                 <input type="text" id="verification" class="form-control" placeholder="Verification code">

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\Routing\Route;
+use App\Models\User_join_mjoin;
+use App\Models\MjoinScore;
 
 
 class UserMjoinController extends Controller
@@ -19,15 +21,16 @@ class UserMjoinController extends Controller
     public function mjoin_post_form()
     {
         $check = UserPostMjoin::where('posted_by_u', Auth::user()->username)
-                                ->where('status','<>', 'del,complete')->first();
+                                ->where('status','<>', 'del,complete,end')->first();
         if(!Auth::check()){
-            return redirect('/login')->whit('error', '請先登入');
+            return redirect('/login')->with('error', '請先登入');
         }
         if($check){
             $error_message = "您已經發過文，請勿重複發文";
             return redirect()->route('front')->with('error_message', $error_message);
         }
         return view('auth.Mjoinform');
+
     }
     //所有揪團
     public function mjoin()
@@ -35,17 +38,39 @@ class UserMjoinController extends Controller
         /*$mjoins = UserPostMjoin::orderBy('id', 'desc')
                                ->where('status','<>','del')                        
                                ->get();*/
-        $mjoins = DB::table('mjoin')
+                               $mjoins = DB::table('mjoin')
                                ->select('mjoin.*', 'user_collections_mjoin.status as status_b', 'user.profileImage_type', 'user.profileImage')
                                ->leftJoin('user_collections_mjoin', 'mjoin.id', '=', 'user_collections_mjoin.article_id')
                                ->leftJoin('user', 'mjoin.posted_by_u', '=', 'user.username')
                                ->orderBy('mjoin.id', 'desc')
                                ->where('mjoin.status', '<>', 'del')
-                               ->distinct() // 使用 distinct 方法来确保结果集中不会出现重复的行
+                               ->distinct()
                                ->get();
                            
+                           $articleIds = $mjoins->pluck('id')->toArray(); // 提取文章 ID
+                           
+                           $checks = [];
+                           if (!empty($articleIds)) {
+                               foreach ($articleIds as $articleId) {
+                                   $check = MjoinScore::where('rater_id', $articleId)->first();
+                                   $checks[$articleId] = $check;
+                               }
+                           }
+                           //時間超過就會自動轉成end
+                           
+                           foreach ($mjoins as $mjoin) {
+                            $dates = explode(' - ', $mjoin->time);
+                            $end_date = Carbon::parse($dates[1]);
+                            if (now()->greaterThan($end_date)) {
+                                DB::table('mjoin')
+                                    ->where('id', $mjoin->id)
+                                    ->where('status', '!=', 'del,complete,end')
+                                    ->update(['status' => 'end']);
+                            }
+                        }
+                                               
 
-        return view('auth.front', compact('mjoins'));
+        return view('auth.front', compact('mjoins','checks'));
     }
     //揪團刪除
     public function mjoin_post_delete($mjoinId)

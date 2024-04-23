@@ -75,7 +75,7 @@ ion-icon {
                 <a href="/front" class="nav-link text-dark" id="link2" onclick="toggleUnderline(event)">揪</a>
             </div>
             <div class="headeractionmargin">
-                <a href="#" class="nav-link text-dark" id="link3" onclick="toggleUnderline(event)">打</a>
+                <a href="/work" class="nav-link text-dark" id="link3" onclick="toggleUnderline(event)">打</a>
             </div>
             <div class="headeractionmargin">
                 <a href="/message-view-show" class="nav-link text-dark" id="link4" onclick="toggleUnderline(event)">訊</a>
@@ -118,9 +118,9 @@ ion-icon {
                         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
                             @if(Auth::user()->profileImage != null)
                                 <?php $imageDataUri = 'data:' . Auth::user()->profileImage_type  . ';base64,' . base64_encode( Auth::user()->profileImage ); ?>
-                                <img src="{{ $imageDataUri }}" alt="mdo" width="32" height="32" class="rounded-circle">
+                                <img src="{{ $imageDataUri }}" alt="mdo" width="40" height="40" class="rounded-circle">
                             @else
-                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                                <img src="https://github.com/mdo.png" alt="mdo" width="40" height="40" class="rounded-circle">
                             @endif
                             <label>{{ session('user_name') }}</label>
                         </a>

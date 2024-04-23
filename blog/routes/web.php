@@ -14,9 +14,10 @@ use App\Http\Controllers\UserCollectionsController;
 use App\Http\Controllers\UserGoodArkController;
 use App\Http\Controllers\UserEditProfileController;
 use App\Http\Controllers\UserJoinController;
-use App\Http\Middleware\ScoreFormMiddleware;
+//use App\Http\Middleware\ScoreFormMiddleware;
 use App\Http\Controllers\UserNotificationController;
 use function Illuminate\Filesystem\name;
+use App\Http\Controllers\UserScoreController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -114,8 +115,7 @@ Route::get('/mjoin_post_posts/countgood/{mjoinId}', [UserGoodController::class, 
 Route::get('/collect_artwork/collect/{article_id}', [UserCollectionsController::class, 'collection_artwork'])->name('collect_artwork');
 //揪團收藏
 Route::get('/collect_mjoin/collect/{article_id}', [UserCollectionsController::class, 'collection_mjoin'])->name('collect_mjoin');
-//打工收藏
-Route::get('/collect_work/collect/{article_id}', [UserCollectionsController::class, 'collection_work'])->name('collect_shop');
+
 //創作按讚
 Route::get('/art_post_posts/good/{article_id}', [UserGoodArkController::class, 'ark_post_good'])->name('ark_post_good');
 //創作按讚取消
@@ -147,9 +147,11 @@ Route::post('/join_mjoin/submit/{mjoind}', [UserJoinController::class, 'join_mjo
 //成功頁面
 Route::get('/success', function () {return view('auth.success');})->name('success');
 //評分表單
-Route::middleware([ScoreFormMiddleware::class])->get('/score_form', function () {
+/*Route::middleware([ScoreFormMiddleware::class])->get('/score_form', function () {
     return view('auth.score_form');
-})->name('score_form');
+})->name('score_form');*/
+
+Route::get('/score_form/{article_id}',[UserScoreController::class,'score_form'])->name('score_form');
 //通知顯示
 Route::get('/allnotify', [UserNotificationController::class, 'allnotify'])->name('allnotify');
 //未讀通知數插入
@@ -160,8 +162,37 @@ Route::get('/join_mjoin_verify/{mjoind}', [UserJoinController::class, 'review_mj
 Route::post('/review_mjoin_pass/{joinId}', [UserJoinController::class, 'review_mjoin_pass'])->name('review_mjoin_pass');
 //審核不通過
 Route::post('/review_mjoin_reject/{joinId}', [UserJoinController::class, 'review_mjoin_reject'])->name('review_mjoin_reject');
-
+//評分送出
+Route::get('/score_form/submit/{mjoinId}', [UserScoreController::class, 'score_form_submit'])->name('score_form_submit');
+//打工編輯表單
+Route::get('/shop_post_posts/edit/{shopd}', [UserWorkController::class, 'shop_edit'])->name('shop_edit');
+//打工編輯
+Route::post('/shop_post_posts/edit/update/{shopId}', [UserWorkController::class, 'shop_post_edit'])->name('shop_post_edit');
+//打工刪除
+Route::post('/shop_post_posts/edit/delete/{shopId}', [UserWorkController::class, 'shop_post_delete'])->name('shop_post_delete');
+//打工收藏
+Route::get('/collect_shop/collect/{article_id}', [UserCollectionsController::class, 'collection_shop'])->name('collect_shop');
+//打工加入表單
+Route::get('/join_shop/{shopd}', [UserJoinController::class, 'join_shop_form'])->name('join_shop_form');
+//打工加入表單送出
+Route::post('/join_shop/submit/{shopd}', [UserJoinController::class, 'join_shop_submit'])->name('join_shop_submit');
+//打工獨立顯示
+Route::get('/shop_solo/{shopId}', [UserWorkController::class, 'user_shop_solo'])->name('user_shop_solo');
+//打工留言數
+Route::get('/shop-reply-count/{shopId}', [UserWorkController::class, 'shop_reply_count']);
+//留言插入
+Route::get('/shop-reply-submit/{shopid}', [UserWorkController::class, 'shop_reply_submit'])->name('shop.reply.submit');
+//揪團留言
+Route::get('/shop-reply/{shopId}', [UserWorkController::class, 'shop_reply']);
+//全部留言
+Route::get('/shop-reply-all/{shopId}', [UserWorkController::class, 'shop_reply_all']);
+//全部打工
+Route::get('/showallshop/{shopId}',[UserWorkController::class, 'showallshop']);
+//全部揪團
 Route::get('/showallmjoin/{mjoinId}',[UserMjoinController::class, 'showallmjoin']);
+//打工
+Route::get('/work', [UserWorkController::class, 'work'])->name('work');
+
 
 Route::post('/login', [UserController::class, 'login'])->name('user.login');
 

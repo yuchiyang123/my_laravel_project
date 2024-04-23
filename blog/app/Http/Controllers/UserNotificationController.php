@@ -139,7 +139,7 @@ class UserNotificationController extends Controller
             
 
             // 生成通知 HTML 内容
-            if($notification != 'notify_join_mjoin'){
+            if($notification->source != 'notify_join_mjoin'){
                 if (!$lastReadTime || $notification->updated_at > $lastReadTime) {
                     $htmlContent .= '<li><a class="dropdown-item" href="' . $url . '" id="join_normalnotify">';
                     if($notification->profileImage!= null){

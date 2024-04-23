@@ -29,8 +29,8 @@ class UserPostWork extends Authenticatable
         'job_description',
         'benefits',
         'shop_information',
-        'senderu',
-        'sendere',
+        'posted_by_u',
+        'posted_by_e',
         'status',
     ];
 }

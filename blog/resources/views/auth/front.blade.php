@@ -261,22 +261,26 @@
                             }
                             $imgcount = 1;
                             @endphp
+                            @if(strlen($text) > 150)
+                            <p>{!! $text !!}<a href="#" class="link-secondary" id="{{ $mjoin->id }}" data-mjoin-id="{{ $mjoin->id }}" onclick="showPopup({{ $mjoin->id }})">繼續閱讀</a></p>
+                            
+                            @else
                             <p>{!! $text !!}</p>
-
+                            @endif
                             @if ($images)
-                            <div id="carouselExampleControlsNoTouching" class="carousel carousel-dark slide" data-bs-interval="false">
+                            <div id="carouselExampleControlsNoTouching{{ $mjoin->id }}" class="carousel carousel-dark slide" data-bs-interval="false">
                                 <div class="carousel-inner">
                                     @foreach($allimg as $allimgs)
                                     @if($imgcount==1)
-                                    <div class="carousel-item active">
-                                        <img src="{{ $allimgs }}" class="d-block" alt="Image">
+                                    <div class="carousel-item active {{ $mjoin->id }}">
+                                        <img src="{{ $allimgs }}" class="d-block mx-auto" alt="Image">
                                     </div>
                                     @php
                                     $imgcount +=1;
                                     @endphp
                                     @else
-                                    <div class="carousel-item">
-                                        <img src="{{ $allimgs }}" class="d-block" alt="Image">
+                                    <div class="carousel-item {{ $mjoin->id }}">
+                                        <img src="{{ $allimgs }}" class="d-block mx-auto" alt="Image">
                                     </div>
                                     @php
                                     $imgcount +=1;
@@ -286,11 +290,11 @@
                                     @endforeach
                                 </div>
                                 @if($imgcount > 2)
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching{{ $mjoin->id }}" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching{{ $mjoin->id }}" data-bs-slide="next">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Next</span>
                                 </button>
@@ -327,8 +331,55 @@
                         </div>
                     </a>
                     @endif
-                    <div class="inner-grid">
-                        <a href="#" id="{{ $mjoin->id }}" data-mjoin-id="{{ $mjoin->id }}" onclick="showPopup({{ $mjoin->id }})">查看完整内容</a>
+                    @php
+                        // 将日期范围拆分为开始日期和结束日期
+                        $dates = explode(' - ', $mjoin->time);
+
+                        // 将开始日期和结束日期转换为 Carbon 实例
+                        $start_date = \Carbon\Carbon::parse($dates[0]);
+                        $end_date = \Carbon\Carbon::parse($dates[1]);
+                    @endphp
+
+                    @if(\Carbon\Carbon::now()->gt($end_date) && session('user_name')!=null && 
+                    \App\Models\User_join_mjoin::where('article_id', $mjoin->id)->where('user_id', auth()->id())->exists())
+
+                    <!-- 显示评分按钮 -->
+                    @if(\App\Models\MjoinScore::where('rater_id', Auth::user()->id)->first() == null && 
+                        \App\Models\User_join_mjoin::select('status')->where('user_id', Auth::user()->id)->where('article_id', $mjoin->id)->first()->status == 'pass')
+                        @if(\App\Models\UserPostMjoin::select('status')->where('posted_by_u', Auth::user()->username)->first()->status == 'complete' || 'end')
+                            <a href="/score_form/{{ $mjoin->id }}"><button type="button" class="btn btn-primary" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="要完成評分喔">評分</button></a>
+                        @else
+                             <span>已完成評分</span>
+                        @endif
+                        
+                    @endif
+
+                    @else
+                    <!-- 不显示评分按钮 -->
+                    @endif
+
+
+                                
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 99999;">
+                        <div class="modal-dialog mx-auto">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">刪除文章</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    您確定要刪除該揪團的文章?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">返回</button>
+                                    <form action="/mjoin_post_posts/edit/delete/{{ $mjoin->id }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary">確定刪除</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     @if(session('user_name')==$mjoin->posted_by_u)
                     <div class="dropdown">
