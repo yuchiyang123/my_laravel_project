@@ -155,8 +155,11 @@ body{
             <p>{{ session('success') }}</p>
             @endif
             
-            
+            @if(session('go'))
+            <a href="{{url('/work')}}" ><button id="btnClick">繼續</button></a>
+            @else
             <a href="{{url('/front')}}" ><button id="btnClick">繼續</button></a>
+            @endif
             <p>點擊下方按鈕，即可回到首頁</p>
         </div>
 <script>

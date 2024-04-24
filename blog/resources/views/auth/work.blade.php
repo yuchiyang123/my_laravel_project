@@ -266,7 +266,7 @@
                     
 
                     @if(session('user_name')!=null && 
-                    \App\Models\Shop_join::where('article_id', $shop->id)->where('user_id', auth()->id())->exists())
+                    \App\Models\Shop_join::where('article_id', $shop->id)->where('status','end,complete')->where('user_id', auth()->id())->exists())
 
                     <!-- 显示评分按钮 -->
                     

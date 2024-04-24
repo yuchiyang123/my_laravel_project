@@ -192,7 +192,12 @@ Route::get('/showallshop/{shopId}',[UserWorkController::class, 'showallshop']);
 Route::get('/showallmjoin/{mjoinId}',[UserMjoinController::class, 'showallmjoin']);
 //打工
 Route::get('/work', [UserWorkController::class, 'work'])->name('work');
-
+//加入揪團審核
+Route::get('/join_shop_verify/{joinId}', [UserJoinController::class, 'review_shop_form'])->name('review_shop_form');
+//審核通過
+Route::post('/review_shop_pass/{joinId}', [UserJoinController::class, 'review_shop_pass'])->name('review_shop_pass');
+//審核不通過
+Route::post('/review_shop_reject/{joinId}', [UserJoinController::class, 'review_shop_reject'])->name('review_shop_reject');
 
 Route::post('/login', [UserController::class, 'login'])->name('user.login');
 

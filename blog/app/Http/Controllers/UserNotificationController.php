@@ -82,16 +82,28 @@ class UserNotificationController extends Controller
 
                     $currentUserId = Auth::user()->id;
 
-                    $query5 = DB::table('notify_join_mjoin')
-                                ->select('notify_join_mjoin.*', 'user.profileImage', 'user.profileImage_type', DB::raw('NULL as additional_field'), DB::raw('"notify_join_mjoin" as source'))
+                $query5 = DB::table('notify_join_mjoin')
+                                ->select('notify_join_mjoin.*','join_mjoin.id','user.profileImage', 'user.profileImage_type', DB::raw('NULL as additional_field'), DB::raw('"notify_join_mjoin" as source'))
+                                ->leftJoin('join_mjoin', 'notify_join_mjoin.join_id', '=', 'join_mjoin.id')
                                 ->leftJoin('user', 'notify_join_mjoin.user_id', '=', 'user.id')
                                 ->where('notify_join_mjoin.user_id','<>', Auth::user()->id)
                                 ->whereNotIn('notify_join_mjoin.user_id', [$currentUserId]) // 排除当前用户的申请
-                                ->whereNotIn('notify_join_mjoin.status', ['pass', 'reject']) // 排除状态为 pass 或 reject 的记录
-                                ->orderBy('updated_at', 'desc')
+                                ->whereNotIn('notify_join_mjoin.status', ['pass', 'reject','complete']) // 排除状态为 pass 或 reject 的记录
+                                ->orderBy('notify_join_mjoin.updated_at', 'desc')
+                                ->get();
+                
+                $query6 = DB::table('shop_join')
+                                ->select('shop_join.*','shop.posted_by_u', 'user.profileImage', 'user.profileImage_type', DB::raw('NULL as additional_field'), DB::raw('"shop_join" as source'))
+                                ->leftJoin('user', 'shop_join.user_id', '=', 'user.id')
+                                ->leftJoin('shop', 'shop_join.article_id', '=', 'shop.id')
+                                ->whereNotIn('shop_join.user_id', [$currentUserId]) // 排除当前用户的申请
+                                //->whereNotIn('shop_join.status', ['pass', 'reject','complete']) // 排除状态为 pass 或 reject 的记录
+                                ->where('shop_join.status','pending')
+                                ->where('shop.posted_by_u',Auth::user()->username)
+                                ->orderBy('shop_join.updated_at', 'desc')
                                 ->get();
                     
-                $notifications = $query1->merge($query2)->merge($query3)->merge($query4)->merge($query5);
+                $notifications = $query1->merge($query2)->merge($query3)->merge($query4)->merge($query5)->merge($query6);
 
                 //dd($notifications->toSql());
                 //$result = $notifications;
@@ -135,11 +147,18 @@ class UserNotificationController extends Controller
                 //$url = '/mjoin/' . $notification->user_id;
                 $url_join = '/join_mjoin_verify/' . $notification->join_id;
 
+            } elseif ($notification->source === 'shop_join') {
+                $imageDataUri_shop = 'data:' . $notification->profileImage_type  . ';base64,' . base64_encode( $notification->profileImage );
+                // 如果通知来源于 mjoin 加入通知的表
+                $content_join = '有人申请加入你的打工';
+                //$url = '/mjoin/' . $notification->user_id;
+                $url_join = '/join_shop_verify/' . $notification->id;
+
             }
             
 
             // 生成通知 HTML 内容
-            if($notification->source != 'notify_join_mjoin'){
+            if($notification->source != 'notify_join_mjoin' && $notification->source != 'shop_join'){
                 if (!$lastReadTime || $notification->updated_at > $lastReadTime) {
                     $htmlContent .= '<li><a class="dropdown-item" href="' . $url . '" id="join_normalnotify">';
                     if($notification->profileImage!= null){
@@ -163,7 +182,6 @@ class UserNotificationController extends Controller
                 }
                 
             }
-           
 
             if($notification->source === 'notify_join_mjoin'){
                 if (!$lastReadTime || $notification->updated_at > $lastReadTime) {
@@ -186,6 +204,26 @@ class UserNotificationController extends Controller
                     $htmlContent_join .= '</a></li>';
                 }
                 
+            } elseif ($notification->source === 'shop_join') {
+                if (!$lastReadTime || $notification->updated_at > $lastReadTime) {
+                    $htmlContent_join .= '<li><a class="dropdown-item" href="' . $url_join . '" id="join_normalnotify">';
+                    if($notification->profileImage!= null){
+                        $htmlContent_join .= '<img src="' . $imageDataUri_shop . '" alt="mdo" width="50" height="50" class="rounded-circle">';
+                    } else {
+                        $htmlContent_join .= '<img src="https://github.com/mdo.png" alt="mdo" width="50" height="50" class="rounded-circle">';
+                    }
+                    $htmlContent_join .= '<span class="fw-bold">' . $content_join . '</span>';
+                    $htmlContent_join .= '</a></li>';
+                } else {
+                    $htmlContent_join .= '<li><a class="dropdown-item" href="' . $url_join . '" id="join_normalnotify">';
+                    if($notification->profileImage!= null){
+                        $htmlContent_join .= '<img src="' . $imageDataUri_shop . '" alt="mdo" width="50" height="50" class="rounded-circle">';
+                    } else {
+                        $htmlContent_join .= '<img src="https://github.com/mdo.png" alt="mdo" width="50" height="50" class="rounded-circle">';
+                    }
+                    $htmlContent_join .= '<span class="">' . $content_join . '</span>';
+                    $htmlContent_join .= '</a></li>';
+                }
             }
             
         }

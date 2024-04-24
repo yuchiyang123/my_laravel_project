@@ -181,7 +181,7 @@ class UserJoinController extends Controller
 
 
     //打工加入
-    public function shop_mjoin_form($shopId){
+    public function join_shop_form($shopId){
         $check_YoN = UserPostWork::where('id',$shopId)->first();
         $check =UserPostWork::where('posted_by_u',Auth::user()->username)->where('id',$shopId)->first();
         $check_repeat = Shop_join::where('user_id',Auth::user()->id)->where('article_id',$shopId)->first();
@@ -213,17 +213,17 @@ class UserJoinController extends Controller
                         ->leftJoin('user_phone','user.id','=','user_phone.user_id')
                         ->where('user.id',Auth::user()->id)
                         ->first();
-        $User_mjoin_infor = UserPostWork::where('id',$shopId)->first();
+        $User_shop_infor = UserPostWork::where('id',$shopId)->first();
         //dd($User_infor);
-        return view('auth.shop_mjoin_form', compact('User_infor','User_shop_infor'));
+        return view('auth.join_shop_form', compact('User_infor','User_shop_infor'));
     }
 
     //表單送出
-    public function shop_mjoin_submit(Request $request,$shopId){
-        $check_YoN = UserPostMjoin::where('id',$shopId)->first();
-        $check = UserPostMjoin::where('posted_by_u',Auth::user()->username)->where('id',$shopId)->first();
-        $check_repeat = User_join_mjoin::where('user_id',Auth::user()->id)->where('article_id',$shopId)->first();
-        $limit_join = User_join_mjoin::where('user_id',Auth::user()->id)->first();
+    public function join_shop_submit(Request $request,$shopId){
+        $check_YoN = UserPostWork::where('id',$shopId)->first();
+        $check = UserPostWork::where('posted_by_u',Auth::user()->username)->where('id',$shopId)->first();
+        $check_repeat = Shop_join::where('user_id',Auth::user()->id)->where('article_id',$shopId)->first();
+        $limit_join = Shop_join::where('user_id',Auth::user()->id)->first();
         //登入判斷
         if(!Auth::check()){
             return redirect('/login');
@@ -243,86 +243,76 @@ class UserJoinController extends Controller
         $User_join_mjoin = new Shop_join();
         $User_join_mjoin->user_id = Auth::user()->id;
         $User_join_mjoin->article_id = $shopId;
-        $User_join_mjoin->sex = $request->input('sex');
-        $User_join_mjoin->age = $request->input('age');
-        $preferences = $request->input('preferences');
-        $foodallergy = $request->input('foodallergy');
-        $languages = $request->input('languages');
-        $license = $request->input('license');
-        $contact_method = $request->input('contact_method');
 
-        // 將陣列轉換為以逗號分隔的字串，如果陣列為空則設置為空字串
-        $preferencesString = !empty($preferences) ? implode(',', $preferences) : '';
-        $foodallergyString = !empty($foodallergy) ? implode(',', $foodallergy) : '';
-        $languagesString = !empty($languages) ? implode(',', $languages) : '';
-        $licenseString = !empty($license) ? implode(',', $license) : '';
-        $contactMethodString = !empty($contact_method) ? implode(',', $contact_method) : '';
+        // 定義所有可能出現的名稱
+        $names = ['name','email','contact_number', 'editor','expected_salary','driving_license','personality', 'availability', 'work_experience', 'motivation'];
 
-        // 將轉換後的字串賦值給相應的屬性
-        $User_join_mjoin->preferences = $preferencesString;
-        $User_join_mjoin->foodallergy = $foodallergyString;
-        $User_join_mjoin->languages = $languagesString;
-        $User_join_mjoin->license = $licenseString;
-        $User_join_mjoin->contact_method = $contactMethodString;
+        // 逐一檢查是否有表單中的名稱存在，若存在則設置對應的屬性值
+        foreach ($names as $name) {
+            if ($request->has($name)) {
+                $inputValue = $request->input($name);
+                
+                // 如果是 checkbox，則轉換為字串
+                if (is_array($inputValue)) {
+                    $inputValue = implode(',', $inputValue);
+                }
+                
+                // 設置屬性值
+                $User_join_mjoin->$name = $inputValue;
+            }
+        }
 
-        $User_join_mjoin->editor = $request->input('editor');
+        // 保存資料
         $User_join_mjoin->status = 'pending';
         $User_join_mjoin->save();
 
-        $User_join_notify_mjoin = new User_notify_mjoin();
-        $User_join_notify_mjoin->user_id = Auth::user()->id;
-        $User_join_notify_mjoin->article_id = $shopId;
-        $User_join_notify_mjoin->join_id = $User_join_mjoin->id;
-        $User_join_notify_mjoin->status = 'pending';
-        $User_join_notify_mjoin->save();
 
-        return redirect('/success');
+
+        return redirect('/success')->with('go','成功');
     }
     //審核表單
-    public function review_mjoin_form($joinId)
+    
+    public function review_shop_form($joinId)
     {
         if(!Auth::check()){
             return redirect('/login');
         }
-        $review_join_mjoin = User_join_mjoin::where('id',$joinId)->first();
+        $review_join_shop = shop_join::where('id',$joinId)->first();
         //$review_join_mjoins = User_notify_mjoin::where('id',$joinId)->first();
-        $review_join_user = User::where('id',$review_join_mjoin->user_id)->first();
-        if(!$review_join_mjoin){
+        $review_join_user = User::where('id',$review_join_shop->user_id)->first();
+        if(!$review_join_shop){
             return redirect()->route('error');
         }
         
 
-        $age = Carbon::parse($review_join_mjoin->age)->age;
-        return view('auth.review_join_mjoin', compact('review_join_mjoin','review_join_user','age'));
+        //$age = Carbon::parse($review_join_mjoin->age)->age;
+        return view('auth.review_join_shop', compact('review_join_shop','review_join_user'));
 
     }
 
-    public function review_mjoin_pass($joinId)
+    public function review_shop_pass($joinId)
     {
-        $review_join_mjoin = User_notify_mjoin::where('join_id',$joinId)->first();
+        //$review_join_mjoin = User_notify_mjoin::where('join_id',$joinId)->first();
         //$review_join_user = User::where('id',$review_join_mjoin->user_id)->first();
-        $review_join_mjoin_join = User_join_mjoin::where('id',$joinId)->first();
-        if(!$review_join_mjoin){
+        $review_join_shop_join = shop_join::where('id',$joinId)->first();
+        //dd($review_join_shop_join);
+        if(!$review_join_shop_join){
             return redirect()->route('error');
         }
-        $review_join_mjoin->status = 'pass';
-        $review_join_mjoin->save();
-        $review_join_mjoin_join->status = 'pass';
-        $review_join_mjoin_join->save();
-        return redirect('/success');
+        $review_join_shop_join->status = 'pass';
+        $review_join_shop_join->update();
+        return redirect('/success')->with('go','成功');
     }
-    public function review_mjoin_reject($joinId)
+    public function review_shop_reject($joinId)
     {
-        $review_join_mjoin = User_notify_mjoin::where('id',$joinId)->first();
+       
         //$review_join_user = User::where('id',$review_join_mjoin->user_id)->first();
-        $review_join_mjoin_join = User_join_mjoin::where('id',$joinId)->first();
-        if(!$review_join_mjoin){
+        $review_join_shop_join = shop_join::where('id',$joinId)->first();
+        if(!$review_join_shop_join){
             return redirect()->route('error');
         }
-        $review_join_mjoin->status = 'rejected';
-        $review_join_mjoin->save();
-        $review_join_mjoin_join->status = 'rejected';
-        $review_join_mjoin_join->save();
-        return redirect('/success');
+        $review_join_shop_join->status = 'rejected';
+        $review_join_shop_join->update();
+        return redirect('/success')->with('go','成功');
     }
 }
