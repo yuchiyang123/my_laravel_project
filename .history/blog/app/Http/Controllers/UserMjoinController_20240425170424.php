@@ -84,9 +84,9 @@ class UserMjoinController extends Controller
                                ->leftJoin('user', 'mjoin.posted_by_u', '=', 'user.username')
                                ->orderBy('mjoin.id', 'desc')
                                ->where('mjoin.status', '<>', 'del')
-                               ->where('id',$mjoinId)
+                               ->where('mjoin.id',$mjoinId)
                                ->distinct()
-                               ->get();
+                               ->first();
         if(!$mjoin){
             return redirect()->route('front')->with('error_message', '此揪團不存在或是遭到刪除');
         }
