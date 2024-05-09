@@ -1,0 +1,256 @@
+@extends('admin.layout.layout')
+
+@section('main_content')
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Fixed Header Table</h3>
+
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" style="height: 300px;">
+          <table class="table table-head-fixed text-nowrap">
+            <thead>
+              <tr>
+                <th>文章id</th>
+                <th>發文者</th>
+                <th>標題</th>
+                <th>發文日期</th>
+                <th>狀態</th>
+              </tr>
+            </thead>
+            @foreach ($mjoins as $mjoin)
+            <tbody>
+              <tr>
+                <td><span>{{ $mjoin->id }}</span></td>
+                <td><span>{{ $mjoin->posted_by_u }}</span></td>
+                <td><span>{{ $mjoin->title }}</span></td>
+                <td><span>{{ $mjoin->created_at }}</span></td>
+                <td>
+                    <span>
+                    @if($mjoin->status=='end')結束揪團
+                    @elseif($mjoin->status=='pending')正在招募
+                    @else 已刪除
+                    @endif
+                    </span></td>
+              </tr>
+              
+            </tbody>
+            @endforeach
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+
+  <!--打工-->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Fixed Header Table</h3>
+
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" style="height: 300px;">
+          <table class="table table-head-fixed text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>183</td>
+                <td>John Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-success">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>219</td>
+                <td>Alexander Pierce</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-warning">Pending</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>657</td>
+                <td>Bob Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-primary">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>175</td>
+                <td>Mike Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-danger">Denied</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>134</td>
+                <td>Jim Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-success">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>494</td>
+                <td>Victoria Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-warning">Pending</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>832</td>
+                <td>Michael Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-primary">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>982</td>
+                <td>Rocky Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-danger">Denied</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+  <!--打工結束-->
+  <!--創作-->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Fixed Header Table</h3>
+
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" style="height: 300px;">
+          <table class="table table-head-fixed text-nowrap">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>183</td>
+                <td>John Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-success">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>219</td>
+                <td>Alexander Pierce</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-warning">Pending</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>657</td>
+                <td>Bob Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-primary">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>175</td>
+                <td>Mike Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-danger">Denied</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>134</td>
+                <td>Jim Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-success">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>494</td>
+                <td>Victoria Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-warning">Pending</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>832</td>
+                <td>Michael Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-primary">Approved</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+              <tr>
+                <td>982</td>
+                <td>Rocky Doe</td>
+                <td>11-7-2014</td>
+                <td><span class="tag tag-danger">Denied</span></td>
+                <td>Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+  </div>
+
+  <!--創作結束-->
+
+@endsection
