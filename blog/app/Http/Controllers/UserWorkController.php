@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Shop_apply;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserPostWork;
@@ -14,6 +15,16 @@ use App\Models\ShopReply;
 
 class UserWorkController extends Controller
 {
+    public function work_post_form()
+    {
+        $shop = Shop_apply::where('user_id', Auth::user()->id)->where('status', 'approved')->first();
+        if(Auth::user()->permissions > 2){
+            return redirect()->route('Work');
+        }
+        return view('auth.Workform',compact('shop'));
+
+    }
+
     //顯示全部打工貼文
     public function work()
     {
@@ -74,7 +85,7 @@ class UserWorkController extends Controller
         if(Auth::check()){
             $shopdel = UserPostWork::where('id',$shopId)
                                        ->first();
-            if(session('user_name')===$shopdel->posted_by_u){
+            if(Auth::user()->username===$shopdel->posted_by_u){
                 $status = 'del';
                 $shopdel->status = $status;
                 $shopdel->update();
@@ -90,7 +101,7 @@ class UserWorkController extends Controller
         if(Auth::check()){
             $shopedits = UserPostWork::where('id',$shopId)
                                          ->first();
-            if(session('user_name')===$shopedits->posted_by_u){
+            if(Auth::user()->username===$shopedits->posted_by_u){
                 $post = UserPostWork::find($shopId);
                 //時間tw
                 date_default_timezone_set('Asia/Taipei');
@@ -160,7 +171,7 @@ class UserWorkController extends Controller
         if(Auth::check()){
             $shopedits = UserPostWork::where('id',$shopId)
                                          ->first();
-            if(session('user_name')===$shopedits->posted_by_u){
+            if(Auth::user()->username===$shopedits->posted_by_u){
                 return view('auth.shopform_edit', compact('shopedits'));
             } else {
                 return redirect()->route('error');
@@ -183,8 +194,8 @@ class UserWorkController extends Controller
             $reply = new ShopReply();
             
             $reply->reply_id = $shopId;
-            $reply->name_e = session('user_email');
-            $reply->name_u = session('user_name');
+            $reply->name_e = Auth::user()->email;
+            $reply->name_u = Auth::user()->username;
             $reply->main = $main;
             $reply->good = 0;
             $reply->status = "pending";
@@ -446,8 +457,8 @@ class UserWorkController extends Controller
     public function work_post(Request $request){
         if(Auth::check()){
             if($request->has('editor')) {
-                $senderu = session('user_name');
-                $sendere = session('user_email');
+                $senderu = Auth::User()->username;
+                $sendere = Auth::User()->email;
                 $post = new UserPostWork();
 
                 

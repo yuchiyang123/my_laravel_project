@@ -890,16 +890,21 @@
                     列表
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">查看資料</a>
-                    <a class="dropdown-item" href="#">參與情況</a>
+                    <a class="dropdown-item" href="/user_auth_data_{{ $user->id }}">查看資料</a>
+                    <a class="dropdown-item" href="/user_join_status{{ $user->id }}">參與情況</a>
                     <a class="dropdown-item" href="#">連絡他</a>
                     <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-secondary">用戶停權</button>
+                    @if($user->state=='action')
+                      <button class="dropdown-item" href="#" data-toggle="modal" data-target="#modal-secondary">用戶停權</button>
+                    @else
+                      <a  href="/user_resume/{{ $user->id }}"><button class="dropdown-item" type="submit">用戶解除停權</button></a>
+                    @endif
                 </div>
               </td>
               <td>{{ $user->state }}</td>
             </tr>
             @endforeach
+            @if($user->state=='action')
             <div class="modal fade" id="modal-secondary">
                 <div class="modal-dialog">
                   <div class="modal-content bg-secondary">
@@ -909,18 +914,22 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
+                    <form action="/user_stop/{{ $user->id }}" method="POST">
+                      @csrf
                     <div class="modal-body">
-                      <textarea class="form-control" rows="3" placeholder="請輸入被停權原因..."></textarea>
+                      <textarea class="form-control" rows="3" placeholder="請輸入被停權原因..." required name="msg"></textarea>
                     </div>
                     <div class="modal-footer justify-content-between">
                       <button type="button" class="btn btn-outline-light" data-dismiss="modal">Close</button>
-                      <button type="button" class="btn btn-outline-light">確認停權</button>
+                      <button type="submit" class="btn btn-outline-light">確認停權</button>
                     </div>
+                    </form>
                   </div>
                   <!-- /.modal-content -->
                 </div>
                 <!-- /.modal-dialog -->
             </div>
+            @endif
             </tbody>
             <tfoot>
             <tr>

@@ -3,6 +3,8 @@
 namespace App\Services;
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Session;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Kreait\Firebase\Factory;
@@ -38,8 +40,6 @@ class UserController extends Controller
     //登入
     public function login(Request $request)
     {
-        
-        //$request->session()->invalidate();
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -53,28 +53,16 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
-        //dd(Auth::attempt($credentials),$credentials);
-
         if (Auth::attempt($loginInfo)) {
-            $db_null = DB::table('sessions')->where('user_id', NULL)->orderBy('last_activity', 'desc')->first();
-            //dd($db_null);
-            if($db_null){
-                DB::table('sessions')->where('id', $db_null->id)->delete();
-            }
-            //Log::info('Login successful for user: ' . Auth::user()->email);
-            //Log::info('Login successful for user1: ' .session('user_email'));
-            //request()->session()->regenerate();
+            $request->session()->regenerate();
             $user = Auth::user();
             $state = $user->state;
-
+            session(['user_email' => Auth::user()->email]);
+            session(['user_name' => $user->username]);
             if ($state == 'suspension') {
-                Auth::logout(); // 登出用户
+                Auth::logout(); 
                 return redirect()->route('login')->with('error','帳號已被停權，請聯絡管理者');
             } else {
-                
-                session(['user_email' => $loginInfo['email']]);
-                session(['user_name' => $user->username]);
-                //$user_id = Auth::user();
                 $user_record = UserRecord::where('user_id',$user->id)->first();
                 if(!$user_record){
                     $user_record = new UserRecord;
@@ -92,9 +80,6 @@ class UserController extends Controller
                 $user_record->loginmany += 1;
                 $user_record->userstatus = 1;
                 $user_record->update();
-                //dd($user);
-                //Log::info('Login successful for user: ' .Auth::attempt($credentials));
-                //Log::info('Login successful for user2: ' .session('user_email'));
                 return redirect()->route('index');
             }
         } else {
@@ -102,40 +87,24 @@ class UserController extends Controller
         }
     }
     //登出
-    public function logout(Request $request)
+    public function logout(Request $request):RedirectResponse
     {
         if(Auth::check()){
             $user_id = Auth::user();
-            
-            $user_record = UserRecord::where('user_id',$user_id->id)->first();
-            if(!$user_record){
-                $user_record = new UserRecord;
-                $user_record->user_id = $user_id->id;
-                $user_record->ip = $request->ip();
-                $current_time = date('Y-m-d H:i:s');
-                $user_record->logintime = $current_time;
-                $user_record->userstatus = 1;
-                $user_record->save();
+            $user_record = UserRecord::where('user_id', $user_id->id)->first();
+            if($user_record){
+                $user_record->userstatus = 0;
+                $user_record->update();
             }
-            $user_record = UserRecord::where('user_id',$user_id->id)->first();
-            $user_record->userstatus = 0;
-            $user_record->update();
-            // 删除会话中的所有数据
-            //session()->flush();
-
-            //session()->forget('user_id');
-            //$request->session()->invalidate();
-            // 删除数据库中与当前用户关联的会话记录
-            DB::table('sessions')->where('user_id', Auth::user()->id)->delete();
-
+            Session::flush();
             Auth::logout();
-            //request()->session()->regenerate();
-            
-
-            
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('index');
         }
-        return redirect()->route('index');
+        
     }
+
     //註冊
     public function user_register(Request $request)
     {
@@ -232,8 +201,8 @@ class UserController extends Controller
                     return response()->json(['status' => 'False','mes' => '這支電話已經驗證過了，請換另一個電話驗證。']);
                 }
             } else {
-                $user = Auth::user();
-                $user_phone = User::where('id',$user->id)
+                //$user = Auth::user();
+                $user_phone = User::where('id',$user_phone_check->user_id)
                                   ->where('verify','yes')
                                   ->first();
                 if(!$user_phone){
@@ -580,8 +549,8 @@ class UserController extends Controller
             $reply = new Artwork_reply();
             
             $reply->reply_id = $ark_id;
-            $reply->name_e = session('user_email');
-            $reply->name_u = session('user_name');
+            $reply->name_e = Auth::user()->email;
+            $reply->name_u = Auth::user()->username;
             $reply->main = $main;
             $reply->status = "pending";
             $level = ($count==0) ? 1 : ($count+1) ;

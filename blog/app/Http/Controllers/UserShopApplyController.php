@@ -37,7 +37,7 @@ class UserShopApplyController extends Controller
     public function shop_apply_form()
     {
 
-        $com = Shop_apply::where('user_id',Auth::user()->id)->where('status','pending')->get();
+        $com = Shop_apply::where('user_id',Auth::user()->id)->where('status','pending')->first();
         if(!Auth::check()){
             return redirect('/login')->with('error', '請先登入');
         }
@@ -66,7 +66,7 @@ class UserShopApplyController extends Controller
         if(Auth::user()->permissions != 3 &&  1){
             return redirect('/work')->with('error', '您已經是店家了');
         }
-        if($apply){
+        if($apply->status == 'approved'){
             return redirect('/work')->with('error', '您已經是店家了，請勿重複申請');
         }
         $shop_apply = new Shop_apply();

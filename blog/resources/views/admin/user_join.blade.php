@@ -65,7 +65,7 @@
                         <td>
                             <ul class="list-inline">
                                 <li class="list-inline-item">
-                                    <img alt="Avatar" class="table-avatar" src="{{ $mjoin->profile_image_url }}">
+                                    <a href="/user-profile/index/d/{{ $mjoin->posted_by_u }}"><img alt="Avatar" class="table-avatar" src="{{ $mjoin->profile_image_url }}"></a>
                                 </li>
                                 @foreach($joiners as $joinerCollection)
                                     @foreach($joinerCollection as $joiner)
@@ -194,7 +194,7 @@
                       <td>
                           <ul class="list-inline">
                               <li class="list-inline-item">
-                                  <img alt="Avatar" class="table-avatar" src="{{ $shop->profile_image_url }}">
+                                  <a href="/user-profile/index/d/{{ $shop->posted_by_u }}"><img alt="Avatar" class="table-avatar" src="{{ $shop->profile_image_url }}">
                               </li>
                               @foreach($shop_joiners as $joinerCollection)
                                   @foreach($joinerCollection as $joiner)

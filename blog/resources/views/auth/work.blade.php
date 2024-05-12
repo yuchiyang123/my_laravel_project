@@ -133,7 +133,7 @@
 
 @section('PostBtn')
 
-@if(session('user_name')!=null)
+@if(Auth::check())
 @if(Auth::user()->permissions != 3 || Auth::user()->permissions == 1)
 <form action="/work_post_form" method="GET">
     <div class="d-grid gap-2">
@@ -352,7 +352,7 @@
                 <div class="ShowAllMessage" id="showAllMessage_{{ $shop->id }}">
 
                 </div>
-                @if(session('user_name')!=null)
+                @if(Auth::check()!=null)
                     
                         @csrf
                         <div class="LeaveMessageInput flex-row">

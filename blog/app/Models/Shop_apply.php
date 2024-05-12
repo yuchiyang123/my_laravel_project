@@ -30,7 +30,8 @@ class Shop_apply extends Model
         'date',
         'status',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'msg'
     ];
 
     // Define relationships if any

@@ -14,22 +14,20 @@
                 <div class="mb-3 text-start">
                     <label class="post-title-label2 fw-bolder">店名:</label>
                     <!--input type="text" class="posts-title" name="destination" required-->
-                    <select id="shop_name" name="shop_name" required class="form-select form-select-sm" aria-label=".form-select-sm example">
-                        <option value="臺北市">臺北市</option>
-                        <option value="新北市">新北市</option>
-                    </select>
+                    <input class="form-control" name="shop_name" type="text" value="{{ $shop->company_name }}" aria-label="readonly input example" readonly>
+                    
                 </div>
                 <div class="mb-3 text-start ">
                     <label class="post-title-label fw-bolder">所在縣市:</label>
-                    <input class="form-control" name="selectwhere" type="text" value="Readonly input here..." aria-label="readonly input example" readonly>
+                    <input class="form-control" name="selectwhere" type="text" value="{{ $shop->county }}" aria-label="readonly input example" readonly>
                 </div>
                 <div class="mb-3 text-start ">
                     <label class="post-title-label fw-bolder">營業登記號:</label>
-                    <input class="form-control" name="business_registration_number" type="text" value="Readonly input here..." aria-label="readonly input example" readonly>
+                    <input class="form-control" name="business_registration_number" value="{{ $shop->uniform_numbers }}" value="Readonly input here..." aria-label="readonly input example" readonly>
                 </div>
                 <div class="mb-3 text-start">
                     <label class="post-title-label3 fw-bolder">地址:</label>
-                    <input class="form-control" name="location" type="text" value="Readonly input here..." aria-label="readonly input example" readonly>
+                    <input class="form-control" name="location" type="text" value="{{ $shop->company_location }}" aria-label="readonly input example" readonly>
                 </div>
                 <div class="mb-3 text-start">
                     <label class="post-title-label3 fw-bolder">技能:</label>
@@ -57,7 +55,7 @@
                 <div class="mb-3 text-start">
                     <label class="post-title-label3 fw-bolder">語言能力:</label><br>
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" value="中文" id="chineseCheckbox" name="languages[]">
+                        <input class="form-check-input" type="checkbox" value="中文" id="chineseCheckbox" name="languages[]" required>
                         <label class="form-check-label" for="chineseCheckbox">中文</label>
                     </div>
                     <div class="form-check form-check-inline">

@@ -226,9 +226,15 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="/user_join" class="nav-link {{ Route::is('user_join')? 'active':'' }}">
+                <a href="/user_join" class="nav-link {{ Route::is('user_join','user_join_status')? 'active':'' }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>加入狀況</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/shop_apply" class="nav-link {{ Route::is('shop_apply')? 'active':'' }}">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>店家審核</p>
                 </a>
               </li>
             </ul>

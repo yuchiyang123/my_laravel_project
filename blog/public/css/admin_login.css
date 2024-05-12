@@ -1,0 +1,20 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #000; /* 黑色背景 */
+}
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background: rgba(20, 20, 20, 0.8); /* 深灰色背景 */
+    padding: 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+}
+
+

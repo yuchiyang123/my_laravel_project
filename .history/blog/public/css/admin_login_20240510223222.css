@@ -1,0 +1,31 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #000; /* 黑色背景 */
+}
+
+.login-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    /*background: rgba(20, 20, 20, 0.8); /* 深灰色背景 */
+    padding: 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #333; /* 暗色邊框 */
+    background: #222; /* 暗色輸入欄位 */
+    color: #fff; /* 白色文字 */
+    border-radius: 5px;
+}
+

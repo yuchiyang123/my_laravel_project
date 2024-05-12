@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Middleware\admin_verity;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
@@ -22,15 +22,20 @@ use App\Http\Controllers\UserScoreController;
 use App\Http\Controllers\UserShopApplyController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\AdminController;
+use App\Http\Middleware\sessionMiddleware;
 
 use App\Http\Controllers\ChatController;
 Route::get('/', [UserController::class, 'index']);
-Route::get('/index', [IndexController::class, 'index'])->name('index');
+
 /*
 Route::get('/home', function () {
     return view('home');
 })->name('home');*/
+Route::get('/index', [IndexController::class, 'index'])->name('index');
 Route::get('/login', [UserController::class, 'index'])->name('login');
+Route::post('/login/submit', [UserController::class, 'login'])->name('user.login');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
 //揪團
 Route::get('/front-view', [UserMjoinController::class, 'mjoin'])->name('front');
 //揪團資料庫
@@ -64,9 +69,7 @@ Route::get('/message-view-show', [chatController::class , 'message_d'])->name('m
 //訊息傳送
 //Route::post('/message-submit/{senderu}/{receiveru}/{receivere}', [UserMessageController::class, 'message_submit'])->name('message_submit');
 //打工發文連結表單
-Route::get('/work_post_form' ,function(){
-    return view('auth.Workform');
-})->name('work_post_form');
+Route::get('/work_post_form' ,[UserWorkController::class, 'work_post_form'])->name('work_post_form');
 //打工發文
 Route::post('/work_post_posts' , [UserWorkController::class, 'work_post'])->name('work_post_posts');
 //創作發文表單連結
@@ -96,7 +99,7 @@ Route::get('/artwork_del/{ark_id}', [UserController::class, 'artwork_del'])->nam
 //創作刪除(從全部出來)
 Route::get('/artwork_del_a/{ark_id}', [UserController::class, 'artwork_del_a'])->name('artwork_del_a');
 //登出
-Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
 //按讚
 Route::post('/posts/{reply_id}/{great_code}/like', [UserGoodController::class, 'click_good'])->name('posts.like');
 //揪團編輯表單
@@ -223,22 +226,53 @@ Route::get('/user_collections_all/{username}', [UserController::class , 'user_co
 //蒐藏全部
 Route::get('/user_score_all/{username}', [UserController::class , 'user_score_all'])->name('user_score_all');
 
-Route::post('/login/submit', [UserController::class, 'login'])->name('user.login');
+
 
 
 
 
 //管理者
-//權限
-Route::get('/admin_index', [AdminController::class, 'admin_index'])->name('admin_index');
-//用戶
-Route::get('/user_auth', [AdminController::class, 'user_auth'])->name('user_auth');
-//cms用戶
-Route::get('/user_cms', [AdminController::class, 'user_cms'])->name('user_cms');
-//用戶加入
-Route::get('/user_join', [AdminController::class, 'user_join'])->name('user_join');
-//管理者揪團單獨顯示
-Route::get('/user_mjoin_solo/{mjoinId}', [AdminController::class, 'user_mjoin_solo'])->name('user_mjoin_solo');
+Route::middleware([admin_verity::class])->group(function () {
+    
+    Route::get('/admin_index', [AdminController::class, 'admin_index'])->name('admin_index');
+    //用戶
+    Route::get('/user_auth', [AdminController::class, 'user_auth'])->name('user_auth');
+    //cms用戶
+    Route::get('/user_cms', [AdminController::class, 'user_cms'])->name('user_cms');
+    //用戶加入
+    Route::get('/user_join', [AdminController::class, 'user_join'])->name('user_join');
+    //管理者揪團單獨顯示
+    Route::get('/user_mjoin_solo/{mjoinId}', [AdminController::class, 'user_mjoin_solo'])->name('user_mjoin_solo');
+    //登出
+    Route::get('/admin_logout', [AdminController::class, 'admin_logout'])->name('admin_logout');
+    //停權
+    Route::post('/user_stop/{userId}', [AdminController::class, 'user_stop'])->name('user_stop');
+    //恢復
+    Route::get('/user_resume/{userId}', [AdminController::class, 'user_resume'])->name('user_resume');
+    //刪除
+    Route::post('/user_delete/{userId}', [AdminController::class, 'user_delete'])->name('user_delete');
+    //用戶參與情況
+    Route::get('/user_join_status{userId}', [AdminController::class, 'user_join_status'])->name('user_join_status');
+    //用戶資料查看
+    Route::get('/user_auth_data_{userId}', [AdminController::class, 'user_auth_data'])->name('user_auth_data');
+    //用戶資料編輯
+    Route::post('/user_auth_data_submit_{userId}', [AdminController::class, 'user_auth_data_submit'])->name('user_auth_data_submit');
+    //用戶清除頭像
+    Route::post('/user_auth_data_delete_profile_image_{userId}', [AdminController::class, 'user_auth_data_delete_profile_image'])->name('user_auth_data_delete_profile_image');
+    //審核店家申請
+    Route::get('/shop_apply', [AdminController::class, 'shop_apply'])->name('shop_apply');
+    //審核店家申請
+    Route::get('/shop_apply_solo_{shopId}', [AdminController::class, 'shop_apply_solo'])->name('shop_apply_solo');
+    //審核店家申請通過
+    Route::post('/shop_apply_pass/{shopId}', [AdminController::class, 'shop_apply_pass'])->name('shop_apply_pass');
+    //審核店家申請不通過
+    Route::post('/shop_apply_reject/{shopId}', [AdminController::class, 'shop_apply_reject'])->name('shop_apply_reject');
+
+});
+//login
+Route::get('/admin_login', [AdminController::class, 'admin_login'])->name('admin_login');
+//登入處理
+Route::post('/admin_login/submit', [AdminController::class, 'admin_login_submit'])->name('admin_login_submit');
 
 //測試連接MySQL
 /*Route::get('/test-db-connection', function () {
