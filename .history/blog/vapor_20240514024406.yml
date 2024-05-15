@@ -1,0 +1,11 @@
+id: 61367
+name: project
+default-environment: production
+environments:
+    production:
+        build:
+            - 'composer install --no-dev'
+    my-environment:
+        build:
+            - 'composer install --no-dev'
+        

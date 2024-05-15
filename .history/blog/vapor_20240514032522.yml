@@ -1,0 +1,10 @@
+id: 61367
+name: project
+environments:
+  production:
+    memory: 1024
+    cli-memory: 512
+    runtime: php-8.2.12:al2
+    build:
+      - composer install --no-dev
+      - php artisan event:cache

@@ -1,0 +1,26 @@
+id: 61367
+name: project
+environments:
+    production:
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-8.2:al2'
+        storage: theprojectname-storage-production
+        database: theprojectname-production
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+        deploy:
+            - 'php artisan migrate --force'
+    staging:
+        memory: 1024
+        cli-memory: 512
+        runtime: 'php-8.2:al2'
+        storage: theprojectname-storage-staging
+        database: theprojectname-production
+        build:
+            - 'COMPOSER_MIRROR_PATH_REPOS=1 composer install --no-dev'
+            - 'php artisan event:cache'
+        deploy:
+            - 'php artisan migrate --force'
+            # - 'php artisan db:seed --force'

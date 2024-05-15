@@ -1,0 +1,12 @@
+id: 61367
+name: project
+environments:
+  production:
+    memory: 1024
+    database: project
+    
+    build:
+      - 'composer install --no-dev'
+      - 'php artisan event:cache'
+    deploy:
+      - 'php artisan migrate --force'
